@@ -1,14 +1,18 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
+option go_package = "/proto";
 
-option go_package = "./";
-
-package proto;
+package quiz;
 
 service QuizService {
-    rpc GetNextQuestion(google.protobuf.Empty) returns (Question) {}
-    rpc SendAnswers(SendAnswersRequest) returns (Feedback) {}
+    rpc GetQuestions(GetQuestionsRequest) returns (GetQuestionsResponse) {}
+    rpc RegisterAnswers(RegisterAnswersRequest) returns (RegisterAnswersResponse) {}
+}
+
+message GetQuestionsRequest {}
+
+message GetQuestionsResponse {
+    repeated Question questions = 1;
 }
 
 message Question {
@@ -27,11 +31,11 @@ message Answer {
     int32 chosenOptionId = 2;
 }
 
-message SendAnswersRequest {
+message RegisterAnswersRequest {
     repeated Answer answers = 1;
 }
 
-message Feedback {
+message RegisterAnswersResponse {
     int32 quizRating = 1;
     repeated QuestionResult quesitonsResults = 2;
     Statistics statistics = 3;

@@ -2,16 +2,15 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.24.4
-// source: quiz.proto
+// source: proto/quiz.proto
 
-package __
+package proto
 
 import (
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,16 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	QuizService_GetNextQuestion_FullMethodName = "/proto.QuizService/GetNextQuestion"
-	QuizService_SendAnswers_FullMethodName     = "/proto.QuizService/SendAnswers"
+	QuizService_GetQuestions_FullMethodName    = "/quiz.QuizService/GetQuestions"
+	QuizService_RegisterAnswers_FullMethodName = "/quiz.QuizService/RegisterAnswers"
 )
 
 // QuizServiceClient is the client API for QuizService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type QuizServiceClient interface {
-	GetNextQuestion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Question, error)
-	SendAnswers(ctx context.Context, in *SendAnswersRequest, opts ...grpc.CallOption) (*Feedback, error)
+	GetQuestions(ctx context.Context, in *GetQuestionsRequest, opts ...grpc.CallOption) (*GetQuestionsResponse, error)
+	RegisterAnswers(ctx context.Context, in *RegisterAnswersRequest, opts ...grpc.CallOption) (*RegisterAnswersResponse, error)
 }
 
 type quizServiceClient struct {
@@ -40,18 +39,18 @@ func NewQuizServiceClient(cc grpc.ClientConnInterface) QuizServiceClient {
 	return &quizServiceClient{cc}
 }
 
-func (c *quizServiceClient) GetNextQuestion(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Question, error) {
-	out := new(Question)
-	err := c.cc.Invoke(ctx, QuizService_GetNextQuestion_FullMethodName, in, out, opts...)
+func (c *quizServiceClient) GetQuestions(ctx context.Context, in *GetQuestionsRequest, opts ...grpc.CallOption) (*GetQuestionsResponse, error) {
+	out := new(GetQuestionsResponse)
+	err := c.cc.Invoke(ctx, QuizService_GetQuestions_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *quizServiceClient) SendAnswers(ctx context.Context, in *SendAnswersRequest, opts ...grpc.CallOption) (*Feedback, error) {
-	out := new(Feedback)
-	err := c.cc.Invoke(ctx, QuizService_SendAnswers_FullMethodName, in, out, opts...)
+func (c *quizServiceClient) RegisterAnswers(ctx context.Context, in *RegisterAnswersRequest, opts ...grpc.CallOption) (*RegisterAnswersResponse, error) {
+	out := new(RegisterAnswersResponse)
+	err := c.cc.Invoke(ctx, QuizService_RegisterAnswers_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,8 +61,8 @@ func (c *quizServiceClient) SendAnswers(ctx context.Context, in *SendAnswersRequ
 // All implementations must embed UnimplementedQuizServiceServer
 // for forward compatibility
 type QuizServiceServer interface {
-	GetNextQuestion(context.Context, *emptypb.Empty) (*Question, error)
-	SendAnswers(context.Context, *SendAnswersRequest) (*Feedback, error)
+	GetQuestions(context.Context, *GetQuestionsRequest) (*GetQuestionsResponse, error)
+	RegisterAnswers(context.Context, *RegisterAnswersRequest) (*RegisterAnswersResponse, error)
 	mustEmbedUnimplementedQuizServiceServer()
 }
 
@@ -71,11 +70,11 @@ type QuizServiceServer interface {
 type UnimplementedQuizServiceServer struct {
 }
 
-func (UnimplementedQuizServiceServer) GetNextQuestion(context.Context, *emptypb.Empty) (*Question, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetNextQuestion not implemented")
+func (UnimplementedQuizServiceServer) GetQuestions(context.Context, *GetQuestionsRequest) (*GetQuestionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetQuestions not implemented")
 }
-func (UnimplementedQuizServiceServer) SendAnswers(context.Context, *SendAnswersRequest) (*Feedback, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendAnswers not implemented")
+func (UnimplementedQuizServiceServer) RegisterAnswers(context.Context, *RegisterAnswersRequest) (*RegisterAnswersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterAnswers not implemented")
 }
 func (UnimplementedQuizServiceServer) mustEmbedUnimplementedQuizServiceServer() {}
 
@@ -90,38 +89,38 @@ func RegisterQuizServiceServer(s grpc.ServiceRegistrar, srv QuizServiceServer) {
 	s.RegisterService(&QuizService_ServiceDesc, srv)
 }
 
-func _QuizService_GetNextQuestion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _QuizService_GetQuestions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetQuestionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QuizServiceServer).GetNextQuestion(ctx, in)
+		return srv.(QuizServiceServer).GetQuestions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: QuizService_GetNextQuestion_FullMethodName,
+		FullMethod: QuizService_GetQuestions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QuizServiceServer).GetNextQuestion(ctx, req.(*emptypb.Empty))
+		return srv.(QuizServiceServer).GetQuestions(ctx, req.(*GetQuestionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _QuizService_SendAnswers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendAnswersRequest)
+func _QuizService_RegisterAnswers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterAnswersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QuizServiceServer).SendAnswers(ctx, in)
+		return srv.(QuizServiceServer).RegisterAnswers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: QuizService_SendAnswers_FullMethodName,
+		FullMethod: QuizService_RegisterAnswers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QuizServiceServer).SendAnswers(ctx, req.(*SendAnswersRequest))
+		return srv.(QuizServiceServer).RegisterAnswers(ctx, req.(*RegisterAnswersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -130,18 +129,18 @@ func _QuizService_SendAnswers_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var QuizService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.QuizService",
+	ServiceName: "quiz.QuizService",
 	HandlerType: (*QuizServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetNextQuestion",
-			Handler:    _QuizService_GetNextQuestion_Handler,
+			MethodName: "GetQuestions",
+			Handler:    _QuizService_GetQuestions_Handler,
 		},
 		{
-			MethodName: "SendAnswers",
-			Handler:    _QuizService_SendAnswers_Handler,
+			MethodName: "RegisterAnswers",
+			Handler:    _QuizService_RegisterAnswers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "quiz.proto",
+	Metadata: "proto/quiz.proto",
 }
