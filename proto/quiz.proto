@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option go_package = "./proto";
+
+package proto;
+
+service QuizService {
+    rpc GetNextQuestion(google.protobuf.Empty) returns (Question) {}
+    rpc SendAnswers(SendAnswersRequest) returns (Feedback) {}
+}
+
+message Question {
+    int32 id = 1;
+    string text = 3;
+    repeated Option options = 4;
+}
+
+message Option {
+    int32 id = 1;
+    string text = 3;
+}
+
+message Answer {
+    int32 questionId = 1;
+    int32 chosenOptionId = 2;
+}
+
+message SendAnswersRequest {
+    repeated Answer answers = 1;
+}
+
+message Feedback {
+    int32 quizRating = 1;
+    repeated QuestionResult quesitonsResults = 2;
+    Statistics statistics = 3;
+}
+
+message QuestionResult {
+    int32 questionId = 1;
+    int32 chosenOptionId = 2;
+    int32 correctOptionId = 3;
+    bool isCorrect = 4;
+}
+
+message Statistics {
+    float betterThan = 3;
+}
