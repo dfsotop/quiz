@@ -9,35 +9,13 @@ type QuizService struct {
 	correctAnswers map[int32]string
 }
 
-func NewQuizService() *QuizService {
-	s := &QuizService{}
-	s.createQuestionsAndAnswers()
+func NewQuizService(questionsSource Source) *QuizService {
+	questions, correctAnswers := questionsSource.GetQuestionsAndAnswers()
+	s := &QuizService{
+		Questions:      questions,
+		correctAnswers: correctAnswers,
+	}
 	return s
-}
-
-func (s *QuizService) createQuestionsAndAnswers() {
-	s.Questions = []*pb.Question{
-		{
-			Id:   1,
-			Text: "Question 1",
-			Options: []*pb.Option{
-				{Id: "a", Text: "Option 1"},
-				{Id: "b", Text: "Option 2"},
-			},
-		},
-		{
-			Id:   2,
-			Text: "Question 2",
-			Options: []*pb.Option{
-				{Id: "a", Text: "Option 1"},
-				{Id: "b", Text: "Option 2"},
-			},
-		},
-	}
-	s.correctAnswers = map[int32]string{
-		1: "a",
-		2: "b",
-	}
 }
 
 func (s *QuizService) GetQuestions() []*pb.Question {

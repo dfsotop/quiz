@@ -1,10 +1,13 @@
 package statistics
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type StatisticsService struct {
-	CorrectAnswers   map[int32]string
 	historicalScores []float32
+	mu               sync.Mutex
 }
 
 func NewStatisticsService() *StatisticsService {
@@ -13,6 +16,9 @@ func NewStatisticsService() *StatisticsService {
 }
 
 func (s *StatisticsService) CompareWithHistorical(score float32) float32 {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	betterThan := 0
 	for _, historicScore := range s.historicalScores {
 		if score > historicScore {
@@ -21,8 +27,11 @@ func (s *StatisticsService) CompareWithHistorical(score float32) float32 {
 	}
 
 	total := len(s.historicalScores)
-	rate := float32(betterThan) / float32(total) * 100
-	fmt.Printf("Better than: %d. Total: %d Rate: %.2f%%. Historic scores: %v\n", betterThan, total, rate, s.historicalScores)
+	var rate float32 = 100
+	if total != 0 {
+		rate = float32(betterThan) / float32(total) * 100
+	}
+	fmt.Printf("Better than: %d. Total: %d Rate: %.2f%%. Historical scores: %v\n", betterThan, total, rate, s.historicalScores)
 
 	s.historicalScores = append(s.historicalScores, score)
 

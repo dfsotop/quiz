@@ -16,9 +16,9 @@ type server struct {
 	statisticsService *statistics.StatisticsService
 }
 
-func NewServer() *server {
+func NewServer(questionsSource quiz.Source) *server {
 	s := &server{}
-	s.quizService = quiz.NewQuizService()
+	s.quizService = quiz.NewQuizService(questionsSource)
 	s.statisticsService = statistics.NewStatisticsService()
 	return s
 }
