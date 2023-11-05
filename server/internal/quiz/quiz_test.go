@@ -131,6 +131,10 @@ func newMockSource() *mockSource {
 	return s
 }
 
+func (s *mockSource) GetQuizTitle() string {
+	return "Mock quiz"
+}
+
 func (s *mockSource) GetQuestionsAndAnswers() ([]*pb.Question, map[int32]string) {
 	return s.Questions, s.CorrectAnswers
 }

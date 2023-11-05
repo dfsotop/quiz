@@ -55,6 +55,6 @@ func TestRegisterAnswers_SuccessfulProcessing(t *testing.T) {
 	// Then
 	assert.NoError(t, err)
 	assert.Equal(t, (float32)(0.0), resp.Score)
-	assert.Equal(t, 2, len(resp.QuesitonsResults))
+	assert.Equal(t, len(s.quizService.Questions), len(resp.QuesitonsResults))
 	assert.Equal(t, float32(100), resp.Statistics.BetterThan)
 }
