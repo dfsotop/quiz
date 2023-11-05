@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 
 	pb "github.dfsotop.quiz/m/proto"
@@ -35,26 +34,32 @@ var quizCmd = &cobra.Command{
 		}
 
 		answers := make([]*pb.Answer, 0)
-		// Use the response
 		for i, question := range response.Questions {
-			fmt.Printf("Question %d: %s\n", i+1, question.Text)
-			for j, option := range question.Options {
-				fmt.Printf("Option %d: %s\n", j+1, option.Text)
+			var option string
+			for {
+				validOptions := make(map[string]bool)
+				fmt.Printf("Question %d: %s\n", i+1, question.Text)
+				for _, option := range question.Options {
+					fmt.Printf("%s) %s\n", option.Id, option.Text)
+					validOptions[option.Id] = true
+				}
+
+				reader := bufio.NewReader(os.Stdin)
+				fmt.Print("Enter the option of your choice: ")
+				text, _ := reader.ReadString('\n')
+				option = strings.TrimSpace(text)
+
+				if _, ok := validOptions[option]; ok {
+					break
+				} else {
+					fmt.Println("Invalid option. Please try again.")
+				}
 			}
 
-			reader := bufio.NewReader(os.Stdin)
-			fmt.Print("Enter the option number: ")
-			text, _ := reader.ReadString('\n')
-			text = strings.TrimSpace(text)
-			optionNumber, err := strconv.ParseInt(text, 10, 32)
-			if err != nil {
-				log.Fatalf("invalid input: %v", err)
-			}
-
-			fmt.Printf("You chose option %d\n", optionNumber)
+			fmt.Printf("You chose option %s\n", option)
 			answer := &pb.Answer{
 				QuestionId:     question.Id,
-				ChosenOptionId: (int32)(optionNumber),
+				ChosenOptionId: option,
 			}
 			answers = append(answers, answer)
 		}
@@ -67,7 +72,20 @@ var quizCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("could not register answers: %v", err)
 		}
-		fmt.Printf("Your score is %d\n", registerAnswersRes.QuizRating)
+		totalCorrect := 0
+		totalWrong := 0
+		for _, questionResult := range registerAnswersRes.QuesitonsResults {
+			if questionResult.ChosenOptionId == questionResult.CorrectOptionId {
+				totalCorrect++
+			} else {
+				totalWrong++
+			}
+		}
+
+		fmt.Printf("Your score is %0.2f%%\n", registerAnswersRes.Score*100)
+		fmt.Printf("Correct answers %d. Wrong answers: %d\n", totalCorrect, totalWrong)
+		fmt.Printf("You were better than %0.2f%% of all quizzers\n", registerAnswersRes.Statistics.BetterThan)
+
 	},
 }
 

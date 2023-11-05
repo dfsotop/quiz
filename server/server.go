@@ -5,52 +5,51 @@ import (
 	"fmt"
 
 	pb "github.dfsotop.quiz/m/proto"
+	"github.dfsotop.quiz/m/server/internal/quiz"
+	"github.dfsotop.quiz/m/server/internal/statistics"
 )
 
 type server struct {
 	pb.UnimplementedQuizServiceServer
-	questions      []*pb.Question
-	correctAnswers map[int32]int32
+
+	quizService       *quiz.QuizService
+	statisticsService *statistics.StatisticsService
 }
 
 func NewServer() *server {
 	s := &server{}
-	s.createQuestions()
+	s.quizService = quiz.NewQuizService()
+	s.statisticsService = statistics.NewStatisticsService()
 	return s
 }
 
-func (s *server) createQuestions() {
-	s.questions = []*pb.Question{
-		{
-			Id:   1,
-			Text: "Question 1",
-			Options: []*pb.Option{
-				{Id: 1, Text: "Option 1"},
-				{Id: 2, Text: "Option 2"},
-			},
-		},
-		{
-			Id:   2,
-			Text: "Question 2",
-			Options: []*pb.Option{
-				{Id: 1, Text: "Option 1"},
-				{Id: 2, Text: "Option 2"},
-			},
-		},
-	}
-	s.correctAnswers = map[int32]int32{
-		1: 1,
-		2: 2,
-	}
-}
-
 func (s *server) GetQuestions(ctx context.Context, in *pb.GetQuestionsRequest) (*pb.GetQuestionsResponse, error) {
-	return &pb.GetQuestionsResponse{Questions: s.questions}, nil
+	questions := s.quizService.GetQuestions()
+	return &pb.GetQuestionsResponse{Questions: questions}, nil
 }
 
 func (s *server) RegisterAnswers(ctx context.Context, in *pb.RegisterAnswersRequest) (*pb.RegisterAnswersResponse, error) {
+	fmt.Printf("Registering answers:\n")
 	for _, answer := range in.Answers {
 		fmt.Printf(answer.String())
 	}
-	return &pb.RegisterAnswersResponse{QuizRating: 12}, nil
+	fmt.Printf("\n")
+
+	if len(in.Answers) != len(s.quizService.Questions) {
+		return nil, fmt.Errorf("invalid number of answers")
+	}
+
+	questionsResuls := s.quizService.GetQuestionsResult(in)
+	score := s.quizService.GetScore(questionsResuls)
+	betterThan := s.statisticsService.CompareWithHistorical(score)
+
+	statistics := &pb.Statistics{
+		BetterThan: float32(betterThan),
+	}
+	return &pb.RegisterAnswersResponse{
+		Score:            score,
+		QuesitonsResults: questionsResuls,
+		Statistics:       statistics,
+	}, nil
+
 }

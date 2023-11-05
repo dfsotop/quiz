@@ -22,13 +22,13 @@ message Question {
 }
 
 message Option {
-    int32 id = 1;
+    string id = 1;
     string text = 3;
 }
 
 message Answer {
     int32 questionId = 1;
-    int32 chosenOptionId = 2;
+    string chosenOptionId = 2;
 }
 
 message RegisterAnswersRequest {
@@ -36,18 +36,18 @@ message RegisterAnswersRequest {
 }
 
 message RegisterAnswersResponse {
-    int32 quizRating = 1;
+    float score = 1;
     repeated QuestionResult quesitonsResults = 2;
     Statistics statistics = 3;
 }
 
 message QuestionResult {
     int32 questionId = 1;
-    int32 chosenOptionId = 2;
-    int32 correctOptionId = 3;
+    string chosenOptionId = 2;
+    string correctOptionId = 3;
     bool isCorrect = 4;
 }
 
 message Statistics {
-    float betterThan = 3;
+    float betterThan = 1;
 }
