@@ -27,7 +27,6 @@ var quizCmd = &cobra.Command{
 
 		c := pb.NewQuizServiceClient(conn)
 
-		// Now you can call the service methods:
 		response, err := c.GetQuestions(context.Background(), &pb.GetQuestionsRequest{})
 		if err != nil {
 			log.Fatalf("could not get questions: %v", err)
@@ -53,7 +52,7 @@ var quizCmd = &cobra.Command{
 				if _, ok := validOptions[option]; ok {
 					break
 				} else {
-					fmt.Println("Invalid option. Please try again.")
+					fmt.Println("Invalid option. Please try again. Use the literal letter of the option")
 				}
 			}
 			answer := &pb.Answer{

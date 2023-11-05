@@ -4,13 +4,18 @@ option go_package = "/proto";
 
 package quiz;
 
+// QuizService defines a service for a Quiz.
 service QuizService {
     rpc GetQuestions(GetQuestionsRequest) returns (GetQuestionsResponse) {}
     rpc RegisterAnswers(RegisterAnswersRequest) returns (RegisterAnswersResponse) {}
 }
 
+// GetQuestionsRequest represents a request to get all questions for the quiz.
+// It does not need to contain any specific fields as it's just a signal to the server to send the questions.
 message GetQuestionsRequest {}
 
+// GetQuestionsResponse represents a response containing all questions for the quiz.
+// It includes the quiz title, and a list of Question messages, each of which includes the question text and the possible answers.
 message GetQuestionsResponse {
     string quizTitle = 1;
     repeated Question questions = 2;
@@ -32,10 +37,15 @@ message Answer {
     string chosenOptionId = 2;
 }
 
+// RegisterAnswersRequest represents a request to register a user's answers.
+// It contains a list of Answer messages, each of which includes a question ID and the chosen option ID.
 message RegisterAnswersRequest {
     repeated Answer answers = 1;
 }
 
+// RegisterAnswersResponse represents a response to a RegisterAnswersRequest.
+// It includes the user's score, a list of QuestionResult messages that indicate the result of each question,
+// and a Statistics message that provides additional information about the user's performance.
 message RegisterAnswersResponse {
     float score = 1;
     repeated QuestionResult quesitonsResults = 2;
@@ -49,6 +59,8 @@ message QuestionResult {
     bool isCorrect = 4;
 }
 
+// Statistics represents additional information about the user's performance in the quiz.
+// It includes a 'betterThan' field which indicates the percentage of users that the current user performed better than.
 message Statistics {
     float betterThan = 1;
 }
