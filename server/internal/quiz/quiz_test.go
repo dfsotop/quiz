@@ -11,7 +11,7 @@ func TestGetQuestions(t *testing.T) {
 	source := newMockSource()
 	expectedQuestions, _ := source.GetQuestionsAndAnswers()
 
-	service := NewQuizService(source)
+	service := NewService(source)
 
 	// When
 	actualQuestions := service.GetQuestions()
@@ -32,7 +32,7 @@ func TestQuizAnswers(t *testing.T) {
 	// Given
 	source := newMockSource()
 	_, answers := source.GetQuestionsAndAnswers()
-	service := NewQuizService(source)
+	service := NewService(source)
 
 	if len(answers) != len(service.correctAnswers) {
 		t.Errorf("expected %d answers, got %d", len(answers), len(service.Questions))
@@ -41,7 +41,7 @@ func TestQuizAnswers(t *testing.T) {
 
 func TestAllAnswersAreInCorrect(t *testing.T) {
 	source := newMockSource()
-	service := NewQuizService(source)
+	service := NewService(source)
 
 	wrongAnswers := make(map[int32]string)
 	for _, question := range service.Questions {
@@ -71,7 +71,7 @@ func TestAllAnswersAreInCorrect(t *testing.T) {
 
 func TestAllAnswersAreCorrect(t *testing.T) {
 	source := newMockSource()
-	service := NewQuizService(source)
+	service := NewService(source)
 
 	correctAnswers := make(map[int32]string)
 	for _, question := range service.Questions {

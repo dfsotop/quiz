@@ -10,7 +10,7 @@ import (
 func TestCompareWithHistorical_LowerThanAll(t *testing.T) {
 	// Given
 	historicalScores := []float32{10, 20, 30, 40, 50}
-	service := &StatisticsService{
+	service := &Service{
 		historicalScores: historicalScores,
 	}
 
@@ -26,7 +26,7 @@ func TestCompareWithHistorical_LowerThanAll(t *testing.T) {
 func TestCompareWithHistorical_HigherThanAll(t *testing.T) {
 	// Given
 	historicalScores := []float32{10, 20, 30, 40, 50}
-	service := &StatisticsService{
+	service := &Service{
 		historicalScores: historicalScores,
 	}
 
@@ -41,7 +41,7 @@ func TestCompareWithHistorical_HigherThanAll(t *testing.T) {
 
 func TestCompareWithHistorical_NoHistoricalScores(t *testing.T) {
 	// Given
-	service := NewStatisticsService()
+	service := NewService()
 
 	// When
 	rate := service.CompareWithHistorical(55)
@@ -54,7 +54,7 @@ func TestCompareWithHistorical_NoHistoricalScores(t *testing.T) {
 
 func TestCompareWithHistorical_Concurrent(t *testing.T) {
 	//Given
-	s := NewStatisticsService()
+	s := NewService()
 	const numGoroutines = 100
 	var wg sync.WaitGroup
 	wg.Add(numGoroutines)

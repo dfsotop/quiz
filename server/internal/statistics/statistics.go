@@ -5,17 +5,17 @@ import (
 	"sync"
 )
 
-type StatisticsService struct {
+type Service struct {
 	historicalScores []float32
 	mu               sync.Mutex
 }
 
-func NewStatisticsService() *StatisticsService {
-	s := &StatisticsService{}
+func NewService() *Service {
+	s := &Service{}
 	return s
 }
 
-func (s *StatisticsService) CompareWithHistorical(score float32) float32 {
+func (s *Service) CompareWithHistorical(score float32) float32 {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 

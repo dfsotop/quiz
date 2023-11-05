@@ -4,16 +4,16 @@ import (
 	pb "github.dfsotop.quiz/m/proto"
 )
 
-type QuizService struct {
+type Service struct {
 	QuizTitle      string
 	Questions      []*pb.Question
 	correctAnswers map[int32]string
 }
 
-func NewQuizService(questionsSource Source) *QuizService {
+func NewService(questionsSource Source) *Service {
 	quizTitle := questionsSource.GetQuizTitle()
 	questions, correctAnswers := questionsSource.GetQuestionsAndAnswers()
-	s := &QuizService{
+	s := &Service{
 		Questions:      questions,
 		correctAnswers: correctAnswers,
 		QuizTitle:      quizTitle,
@@ -21,11 +21,11 @@ func NewQuizService(questionsSource Source) *QuizService {
 	return s
 }
 
-func (s *QuizService) GetQuestions() []*pb.Question {
+func (s *Service) GetQuestions() []*pb.Question {
 	return s.Questions
 }
 
-func (s *QuizService) GetQuestionsResult(in *pb.RegisterAnswersRequest) []*pb.QuestionResult {
+func (s *Service) GetQuestionsResult(in *pb.RegisterAnswersRequest) []*pb.QuestionResult {
 	questionResults := make([]*pb.QuestionResult, 0)
 	for _, answer := range in.Answers {
 		questionResult := &pb.QuestionResult{
@@ -39,7 +39,7 @@ func (s *QuizService) GetQuestionsResult(in *pb.RegisterAnswersRequest) []*pb.Qu
 	return questionResults
 }
 
-func (s *QuizService) GetScore(answers []*pb.QuestionResult) float32 {
+func (s *Service) GetScore(answers []*pb.QuestionResult) float32 {
 	totalCorrect := 0
 	for _, answer := range answers {
 		if answer.IsCorrect {

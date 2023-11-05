@@ -12,14 +12,14 @@ import (
 type server struct {
 	pb.UnimplementedQuizServiceServer
 
-	quizService       *quiz.QuizService
-	statisticsService *statistics.StatisticsService
+	quizService       *quiz.Service
+	statisticsService *statistics.Service
 }
 
 func NewServer(questionsSource quiz.Source) *server {
 	s := &server{}
-	s.quizService = quiz.NewQuizService(questionsSource)
-	s.statisticsService = statistics.NewStatisticsService()
+	s.quizService = quiz.NewService(questionsSource)
+	s.statisticsService = statistics.NewService()
 	return s
 }
 
