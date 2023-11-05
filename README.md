@@ -84,7 +84,7 @@ If you whish to modify the contract, include your changes in the file ./proto/qu
 
 Please Consider that you may also have to modify the server and client code to include your changes.
 
-# Generate binding files
+## Generate binding files
 
 ### Prerequisites
 
