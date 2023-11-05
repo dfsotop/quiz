@@ -5,15 +5,18 @@ import (
 )
 
 type QuizService struct {
+	QuizTitle      string
 	Questions      []*pb.Question
 	correctAnswers map[int32]string
 }
 
 func NewQuizService(questionsSource Source) *QuizService {
+	quizTitle := questionsSource.GetQuizTitle()
 	questions, correctAnswers := questionsSource.GetQuestionsAndAnswers()
 	s := &QuizService{
 		Questions:      questions,
 		correctAnswers: correctAnswers,
+		QuizTitle:      quizTitle,
 	}
 	return s
 }

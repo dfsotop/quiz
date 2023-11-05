@@ -32,6 +32,7 @@ var quizCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("could not get questions: %v", err)
 		}
+		fmt.Printf("This quiz is about: %s. Let's start!\n\n", response.QuizTitle)
 
 		answers := make([]*pb.Answer, 0)
 		for i, question := range response.Questions {
@@ -55,8 +56,6 @@ var quizCmd = &cobra.Command{
 					fmt.Println("Invalid option. Please try again.")
 				}
 			}
-
-			fmt.Printf("You chose option %s\n", option)
 			answer := &pb.Answer{
 				QuestionId:     question.Id,
 				ChosenOptionId: option,
@@ -68,6 +67,7 @@ var quizCmd = &cobra.Command{
 			Answers: answers,
 		}
 
+		fmt.Printf("\nCongratulations! You finished the quiz. Let's see how you did.\n")
 		registerAnswersRes, err := c.RegisterAnswers(context.Background(), registerAnswersReq)
 		if err != nil {
 			log.Fatalf("could not register answers: %v", err)
@@ -82,9 +82,9 @@ var quizCmd = &cobra.Command{
 			}
 		}
 
-		fmt.Printf("Your score is %0.2f%%\n", registerAnswersRes.Score*100)
-		fmt.Printf("Correct answers %d. Wrong answers: %d\n", totalCorrect, totalWrong)
-		fmt.Printf("You were better than %0.2f%% of all quizzers\n", registerAnswersRes.Statistics.BetterThan)
+		fmt.Printf("- Your score was %0.2f%%\n", registerAnswersRes.Score*100)
+		fmt.Printf("- Correct answers %d. Wrong answers: %d\n", totalCorrect, totalWrong)
+		fmt.Printf("- You were better than %0.2f%% of all quizzers\n", registerAnswersRes.Statistics.BetterThan)
 
 	},
 }

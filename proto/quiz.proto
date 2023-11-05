@@ -12,7 +12,8 @@ service QuizService {
 message GetQuestionsRequest {}
 
 message GetQuestionsResponse {
-    repeated Question questions = 1;
+    string quizTitle = 1;
+    repeated Question questions = 2;
 }
 
 message Question {

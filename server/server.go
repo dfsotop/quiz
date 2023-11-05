@@ -24,8 +24,9 @@ func NewServer(questionsSource quiz.Source) *server {
 }
 
 func (s *server) GetQuestions(ctx context.Context, in *pb.GetQuestionsRequest) (*pb.GetQuestionsResponse, error) {
+	quizTitle := s.quizService.QuizTitle
 	questions := s.quizService.GetQuestions()
-	return &pb.GetQuestionsResponse{Questions: questions}, nil
+	return &pb.GetQuestionsResponse{Questions: questions, QuizTitle: quizTitle}, nil
 }
 
 func (s *server) RegisterAnswers(ctx context.Context, in *pb.RegisterAnswersRequest) (*pb.RegisterAnswersResponse, error) {
